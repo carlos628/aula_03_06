@@ -2,12 +2,20 @@
 
 
 
+
+<?php
+//echo '<pre>';
+//var_dump($_GET);
+//echo '</pre>';
+
+phpinfo();
+exit;
+?>
+
+
+
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+
 <html>
     <head>
         <title>CADASTRO DE PESSOAS</title>
@@ -25,7 +33,7 @@ and open the template in the editor.
 
             <div class="row">
                 <div class="col-md-6"> 
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" method="GET"action=index.php >
                         <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">NOME</label>
                             <div class="col-sm-10">
@@ -72,7 +80,30 @@ and open the template in the editor.
         </div>
 
     </div>
-
+    <script>
+    $('#btn-enviar').click(function()){
+        var valido = true;
+       
+        if($('#input - nome').val()=='';
+        valido = false;
+      alert('nome')
+    }
+    
+    
+    
+     if($('#input - nome').val()=='';
+        valido = false;
+     alert('nome')
+    
+    }
+     if($('#input - nome').val()=='';
+        valido = false;
+     alert('nome')
+    }
+    
+    
+    
+    </script>
 </body>
 </html>
 
