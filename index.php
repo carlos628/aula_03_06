@@ -1,35 +1,9 @@
 <?php
-//echo '<pre>';
-//var_dump($_GET);
-//echo '</pre>';
-
-
-$con = new mysqli('127.0.0.1', 'root', '', 'lp22015');
-
-$sql = $con->prepare('INSERT INTO pessoa('
-.'nome,'
-.'endereco,'
-.'sexo,'
-.'ativo )'
-. ' VALUES (?, ?, ?, ? )');
-
-if(isset($_GET['ativo'])){
-    $ativo = 1;
-}else{
-    $ativo = 0;
-}
-
-$sql->bind_param('sssi',$_GET['nome'],$_GET['endereco'],$_GET['sexo'],$_GET['sexo']);
-
-
-if($sql->execute()){
-    echo '<h2>sucesso</h2>';
-    
-}else{
-    echo '<pre>';
-    var_dump($sql->error_list);
-    echo '</pre>';
-}
+require_once('comum.php');
+$con = novaConexao();
+$sql = $con->prepare('SELECT id, nome, endereco, sexo, ativo FROM pessoa');
+$sql->execute();
+$sql->bind_result($id, $nome, $endereco, $sexo, $ativo);
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +21,7 @@ if($sql->execute()){
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <form class="form-horizontal" method="GET" action="index.php">
+                    <form class="form-horizontal" method="GET" action="incluir.php">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Nome</label>
                             <div class="col-sm-10">
@@ -83,33 +57,62 @@ if($sql->execute()){
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button class="btn btn-success" id="btn-enviar" type="submit" >Inserir</button>
+                                <?php if(isset($_GET['msg'])){ ?>
+                                <span><?php echo $_GET['msg']; ?></span>
+                                <?php } ?>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="col-md-6">
                     <h5>Listagem de pessoas</h5>
+                    <ul>
+                        <?php while ($sql->fetch()) {
+                            if($sexo == 'm'){
+                                $sexo = 'Masculino';
+                            }else if($sexo == 'f'){
+                                $sexo = 'Feminino';
+                            }
+                            if($ativo){
+                                $ativo = 'Sim';
+                            }else{
+                                $ativo = 'Não';
+                            } ?>
+                            <li>
+                                <?php echo $nome; ?> <a onclick="confirmaDeletar()" class='btn btn-danger btn-xs'>Deletar</a>
+                                <ul>
+                                    <li>Endereço: <?php echo $endereco; ?></li>
+                                    <li>Sexo: <?php echo $sexo; ?></li>
+                                    <li>Ativo: <?php echo $ativo; ?></li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+
+                    </ul>
                 </div>
             </div>
         </div>
         <script>
             $('#btn-enviar').click(function () {
-var valido = true;
-if ($('#input-nome').val() == '') {
-    valido = false;
-    alert('Preencha o nome');
-}
-if ($('#input-endereco').val() == '') {
-    valido = false;
-    alert('Preencha o endereço');
-}
-if (!$('#opt-masc').is(':checked') &&!$('#opt-fem').is(':checked')) {
-    valido = false;
-    alert('Escolha um sexo');
-}
-
-return valido;
-})
-</script>
-</body>
+                var valido = true;
+                if ($('#input-nome').val() == '') {
+                    valido = false;
+                    alert('Preencha o nome');
+                }
+                if ($('#input-endereco').val() == '') {
+                    valido = false;
+                    alert('Preencha o endereço');
+                }
+                if (!$('#opt-masc').is(':checked') && !$('#opt-fem').is(':checked')) {
+                    valido = false;
+                    alert('Escolha um sexo');
+                }
+                return valido;
+            })
+            
+            function confirmaDeletar(){
+                confirm("Deseja Deletar?");
+            }
+        </script>
+    </body>
 </html>
